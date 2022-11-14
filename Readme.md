@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Vitalii Iashchuk](https://up.htmlacademy.ru/nodejs-2/2/user/93555).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Пан](https://up.htmlacademy.ru/nodejs-2/2/user/1437965).
 
 ---
 
