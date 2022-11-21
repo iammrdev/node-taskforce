@@ -9,3 +9,8 @@
 .DS_Store
 coverage
 *.log
+Notes.md
+
+taskforce/node_modules/
+taskforce/dist/
+
