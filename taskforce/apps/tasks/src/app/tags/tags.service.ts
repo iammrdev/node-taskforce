@@ -5,7 +5,7 @@ export class TagsService {
   async getTags() {
     return {
       status: 'ok',
-      item: {},
+      items: [],
     };
   }
 
