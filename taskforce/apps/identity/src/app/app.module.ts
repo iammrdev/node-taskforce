@@ -4,6 +4,8 @@ import { UserModule } from './users/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { ENV_FILE_PATH } from './app.constant';
 import databaseConfig from '../config/database.config';
+// import envSchema from './env.schema';
+import { validateEnvironments } from './env.validation';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import databaseConfig from '../config/database.config';
       isGlobal: true,
       envFilePath: ENV_FILE_PATH,
       load: [databaseConfig],
+      // validationSchema: envSchema,
+      validate: validateEnvironments,
     }),
     AuthModule,
     UserModule,
