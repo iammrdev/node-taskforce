@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService, ConfigType } from '@nestjs/config';
 import * as dayjs from 'dayjs';
 import { UserRole } from '@taskforce/shared-types';
 import { UserRepositoryMemory } from '../users/user.repository.memory';
@@ -10,10 +11,20 @@ import {
   USER_PASSWORD_WRONG,
 } from './auth.constant';
 import { UserEntity } from '../users/user.entity';
+import databaseConfig from '../../config/database.config';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepositoryMemory: UserRepositoryMemory) {}
+  constructor(
+    private readonly userRepositoryMemory: UserRepositoryMemory,
+    private readonly configService: ConfigService,
+    @Inject(databaseConfig.KEY)
+    private readonly mongoConfig: ConfigType<typeof databaseConfig>
+  ) {
+    // Получаем настройки, используюя точечную нотацию
+    console.log(configService.get<string>('database'));
+    console.log({ mongoConfig });
+  }
 
   async signup(dto: UserSignUpDTO) {
     const { email, name, surname, password, birthDate } = dto;
