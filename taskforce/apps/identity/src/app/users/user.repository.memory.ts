@@ -5,7 +5,9 @@ import { User } from '@taskforce/shared-types';
 import { UserEntity } from './user.entity';
 
 @Injectable()
-export class UserRepositoryMemory implements CRUDRepository<UserEntity, string, User> {
+export class UserRepositoryMemory
+  implements CRUDRepository<UserEntity, string, User>
+{
   private repository: { [key: string]: User } = {};
 
   public async create(item: UserEntity): Promise<User> {
@@ -24,8 +26,9 @@ export class UserRepositoryMemory implements CRUDRepository<UserEntity, string, 
   }
 
   public async findByEmail(email: string): Promise<User | null> {
-    const existUser = Object.values(this.repository)
-      .find((userItem) => userItem.email === email);
+    const existUser = Object.values(this.repository).find(
+      (userItem) => userItem.email === email
+    );
 
     if (!existUser) {
       return null;

@@ -3,32 +3,22 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class TasksService {
   async getTask(taskId: string) {
-    return {
-      status: 'ok',
-      item: {
-        id: taskId,
-      },
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 
   async createTask() {
-    return {
-      status: 'ok',
-      item: {},
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 
   async updateTask() {
-    return {
-      status: 'ok',
-      item: {},
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 
   async getTasks() {
-    return {
-      status: 'ok',
-      items: [],
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return [];
   }
 }

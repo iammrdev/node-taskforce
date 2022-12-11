@@ -3,25 +3,17 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class TagsService {
   async getTags() {
-    return {
-      status: 'ok',
-      items: [],
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return [];
   }
 
   async createTag() {
-    return {
-      status: 'ok',
-      item: {},
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 
   async updateTag(tagId: string) {
-    return {
-      status: 'ok',
-      item: {
-        tagId,
-      },
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 }

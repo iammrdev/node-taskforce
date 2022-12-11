@@ -15,3 +15,5 @@ taskforce/node_modules/
 taskforce/dist/
 
 *.env
+
+db

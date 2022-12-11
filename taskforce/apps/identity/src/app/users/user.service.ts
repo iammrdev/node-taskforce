@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepositoryMemory } from './user.repository.memory';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepositoryMemory: UserRepositoryMemory) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async getUser(id: string) {
-    return this.userRepositoryMemory.findById(id);
+    return this.userRepository.findById(id);
   }
 }
