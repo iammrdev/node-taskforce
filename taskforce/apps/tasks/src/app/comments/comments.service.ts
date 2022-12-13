@@ -3,30 +3,17 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class CommentsService {
   async getComments(taskId: string) {
-    return {
-      status: 'ok',
-      item: {
-        taskId,
-      },
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return [];
   }
 
   async createComment(taskId: string) {
-    return {
-      status: 'ok',
-      item: {
-        taskId,
-      },
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 
   async updateComment(taskId: string, commentId: string) {
-    return {
-      status: 'ok',
-      item: {
-        taskId,
-        commentId,
-      },
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 }

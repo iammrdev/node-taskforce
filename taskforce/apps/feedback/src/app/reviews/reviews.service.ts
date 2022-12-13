@@ -3,25 +3,17 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ReviewsService {
   async getReviews() {
-    return {
-      status: 'ok',
-      items: [],
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return [];
   }
 
   async createReview() {
-    return {
-      status: 'ok',
-      item: {},
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 
   async updateReview(reviewId: string) {
-    return {
-      status: 'ok',
-      item: {
-        reviewId,
-      },
-    };
+    // Будет реализовано в модуле: Nest и базы данных. PostgreSQL
+    return {};
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as dayjs from 'dayjs';
 import { UserRole } from '@taskforce/shared-types';
-import { UserRepositoryMemory } from '../users/user.repository.memory';
+import { UserRepository } from '../users/user.repository';
 import { UserSignUpDTO } from './dto/user-signup.dto';
 import { UserSignInDTO } from './dto/user-signin.dto';
 import {
@@ -13,7 +13,7 @@ import { UserEntity } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepositoryMemory: UserRepositoryMemory) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async signup(dto: UserSignUpDTO) {
     const { email, name, surname, password, birthDate } = dto;
@@ -28,7 +28,7 @@ export class AuthService {
       passwordHash: '',
     };
 
-    const existUser = await this.userRepositoryMemory.findByEmail(email);
+    const existUser = await this.userRepository.findByEmail(email);
 
     if (existUser) {
       throw new Error(USER_EXISTS);
@@ -36,12 +36,12 @@ export class AuthService {
 
     const userEntity = await new UserEntity(user).setPassword(password);
 
-    return this.userRepositoryMemory.create(userEntity);
+    return this.userRepository.create(userEntity);
   }
 
   async verifyUser(dto: UserSignInDTO) {
     const { email, password } = dto;
-    const existUser = await this.userRepositoryMemory.findByEmail(email);
+    const existUser = await this.userRepository.findByEmail(email);
 
     if (!existUser) {
       throw new Error(USER_NOT_FOUND);
@@ -57,6 +57,6 @@ export class AuthService {
   }
 
   async getUser(id: string) {
-    return this.userRepositoryMemory.findById(id);
+    return this.userRepository.findById(id);
   }
 }

@@ -1,6 +1,7 @@
 import { Controller, Get, HttpStatus, Param, Post, Put } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CommentsService } from './comments.service';
+import { CommentRDO } from './rdo/comment.rdo';
 
 @ApiTags('comments')
 @Controller('tasks/:taskId/comments')
@@ -20,6 +21,7 @@ export class CommentsController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Comments list',
+    type: CommentRDO,
   })
   async getComments(@Param('taskId') taskId: string) {
     return this.tasksService.getComments(taskId);
@@ -30,7 +32,7 @@ export class CommentsController {
     status: HttpStatus.OK,
     description: 'Comment updated',
   })
-  async updateTask(
+  async updateComment(
     @Param('taskId') taskId: string,
     @Param('commentId') commentId: string
   ) {

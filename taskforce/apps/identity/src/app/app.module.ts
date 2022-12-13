@@ -1,9 +1,28 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './users/user.module';
+import { ConfigModule } from '@nestjs/config';
+import { ENV_FILE_PATH } from './app.constant';
+import databaseConfig from '../config/database.config';
+// import envSchema from './env.schema';
+import { validateEnvironments } from './env.validation';
+import { MongooseModule } from '@nestjs/mongoose';
+import { getMongoDbConfig } from '../config/mongodb.config';
 
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [
+    ConfigModule.forRoot({
+      cache: true,
+      isGlobal: true,
+      envFilePath: ENV_FILE_PATH,
+      load: [databaseConfig],
+      // validationSchema: envSchema,
+      validate: validateEnvironments,
+    }),
+    MongooseModule.forRootAsync(getMongoDbConfig()),
+    AuthModule,
+    UserModule,
+  ],
   controllers: [],
   providers: [],
 })

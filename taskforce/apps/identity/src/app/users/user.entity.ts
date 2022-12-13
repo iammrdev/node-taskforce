@@ -27,7 +27,16 @@ export class UserEntity implements User {
   }
 
   public toObject() {
-    return { ...this };
+    return {
+      _id: this._id,
+      avatar: this.avatar,
+      email: this.email,
+      name: this.name,
+      surname: this.surname,
+      birthDate: this.birthDate,
+      passwordHash: this.passwordHash,
+      role: this.role,
+    };
   }
 
   public fillEntity(user: User) {
