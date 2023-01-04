@@ -38,21 +38,20 @@ export class TagsController {
   })
   async getTags() {
     const tags = await this.tagsService.getTags();
+
     return fillObject(TagRDO, tags);
   }
 
   @Get(':tagId')
-  async getTag(@Param('tagId') rawTagId: string) {
-    const tagId = parseInt(rawTagId, 10);
+  async getTag(@Param('tagId') tagId: number) {
     const existTag = await this.tagsService.getTag(tagId);
+
     return fillObject(TagRDO, existTag);
   }
 
   @Delete(':tagId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteTag(@Param('tagId') rawTagId: string) {
-    const tagId = parseInt(rawTagId, 10);
-
+  async deleteTag(@Param('tagId') tagId: number) {
     this.tagsService.deleteTag(tagId);
   }
 
@@ -61,8 +60,7 @@ export class TagsController {
     status: HttpStatus.OK,
     description: 'Tag updated',
   })
-  async updateTag(@Param('tagId') rawTagId: string, @Body() dto: UpdateTagDTO) {
-    const tagId = parseInt(rawTagId, 10);
+  async updateTag(@Param('tagId') tagId: number, @Body() dto: UpdateTagDTO) {
     const updatedTag = await this.tagsService.updateTag(tagId, dto);
 
     return fillObject(TagRDO, updatedTag);

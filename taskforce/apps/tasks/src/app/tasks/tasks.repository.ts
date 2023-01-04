@@ -3,6 +3,7 @@ import { TasksEntity } from './tasks.entity';
 import { Task } from '@taskforce/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { TaskQuery } from './query/task.query';
 
 @Injectable()
 export class TasksRepository implements CRUDRepository<TasksEntity, number, Task> {
@@ -46,11 +47,21 @@ export class TasksRepository implements CRUDRepository<TasksEntity, number, Task
     });
   }
 
-  public find(ids: number[] = []): Promise<Task[]> {
+  public find({ limit, tags, category, sortDirection, page }: TaskQuery): Promise<Task[]> {
     return this.prisma.task.findMany({
       where: {
-        id: { in: ids.length > 0 ? ids : undefined },
+        categoryId: category,
+        tags: {
+          some: {
+            id: {
+              in: tags
+            }
+          }
+        }
       },
+      take: limit,
+      orderBy: [{ createdAt: sortDirection }],
+      skip: page > 0 ? limit * (page - 1) : undefined,
       include: {
         category: true,
         comments: true,

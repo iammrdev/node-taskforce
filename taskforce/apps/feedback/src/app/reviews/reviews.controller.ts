@@ -15,9 +15,7 @@ export class ReviewsController {
     status: HttpStatus.CREATED,
     description: 'Review created',
   })
-  async createReview(@Param('taskId') rawTaskId: string, @Body() dto: CreateReviewDTO) {
-    const taskId = parseInt(rawTaskId, 10);
-
+  async createReview(@Param('taskId') taskId: number, @Body() dto: CreateReviewDTO) {
     return this.reviewsService.createReview({ taskId, ...dto });
   }
 
@@ -26,11 +24,10 @@ export class ReviewsController {
     status: HttpStatus.OK,
     description: 'Reviews list',
   })
-  async getReviews(@Param('taskId') rawTaskId: string) {
-    const taskId = parseInt(rawTaskId, 10);
-    const Reviews = this.reviewsService.getReviews(taskId);
+  async getReviews(@Param('taskId') taskId: number) {
+    const reviews = this.reviewsService.getReviews(taskId);
 
-    return fillObject(ReviewRDO, Reviews);
+    return fillObject(ReviewRDO, reviews);
   }
 
   @Patch(':reviewId')
@@ -39,12 +36,10 @@ export class ReviewsController {
     description: 'Review updated',
   })
   async updateReview(
-    @Param('taskId') rawTaskId: string,
-    @Param('reviewId') rawReviewId: string,
+    @Param('taskId') taskId: number,
+    @Param('reviewId') reviewId: number,
     @Body() dto: UpdateReviewDTO
   ) {
-    const reviewId = parseInt(rawReviewId, 10);
-    const taskId = parseInt(rawTaskId, 10);
     const updatedReview = this.reviewsService.updateReview(reviewId, { ...dto, taskId });
 
     return fillObject(ReviewRDO, updatedReview);
@@ -52,9 +47,7 @@ export class ReviewsController {
 
   @Delete(':reviewId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteReview(@Param('reviewId') rawReviewId: string,) {
-    const reviewId = parseInt(rawReviewId, 10);
-
+  async deleteReview(@Param('reviewId') reviewId: number) {
     this.reviewsService.deleteReview(reviewId);
   }
 }

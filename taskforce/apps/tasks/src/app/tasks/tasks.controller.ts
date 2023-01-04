@@ -1,7 +1,8 @@
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { TaskQuery } from './query/task.query';
 import { TasksService } from './tasks.service';
 
 @ApiTags('tasks')
@@ -23,8 +24,8 @@ export class TasksController {
     status: HttpStatus.OK,
     description: 'Tasks list',
   })
-  async getTasks() {
-    return this.taskService.getTasks();
+  async getTasks(@Query() query: TaskQuery) {
+    return this.taskService.getTasks(query);
   }
 
   @Get(':taskId')
@@ -32,9 +33,7 @@ export class TasksController {
     status: HttpStatus.OK,
     description: 'Task found',
   })
-  async getTask(@Param('taskId') rawTaskId: string) {
-    const taskId = parseInt(rawTaskId, 10);
-
+  async getTask(@Param('taskId') taskId: number) {
     return this.taskService.getTask(taskId);
   }
 
@@ -43,8 +42,7 @@ export class TasksController {
     status: HttpStatus.OK,
     description: 'Task updated',
   })
-  async updateTask(@Param('taskId') rawTaskId: string, @Body() dto: UpdateTaskDTO) {
-    const taskId = parseInt(rawTaskId, 10);
+  async updateTask(@Param('taskId') taskId: number, @Body() dto: UpdateTaskDTO) {
 
     return this.taskService.updateTask(taskId, dto);
   }

@@ -3,6 +3,7 @@ import { CommentsRepository } from '../comments/comments.repository';
 import { TagsRepository } from '../tags/tags.repository';
 import { CreateTaskDTO } from './dto/create-task.dto';
 import { UpdateTaskDTO } from './dto/update-task.dto';
+import { TaskQuery } from './query/task.query';
 import { TasksEntity } from './tasks.entity';
 import { TasksRepository } from './tasks.repository';
 
@@ -25,8 +26,8 @@ export class TasksService {
     return this.tasksRepository.findById(taskId);
   }
 
-  async getTasks() {
-    return this.tasksRepository.find();
+  async getTasks(query: TaskQuery) {
+    return this.tasksRepository.find(query);
   }
 
   async updateTask(id: number, dto: UpdateTaskDTO) {

@@ -42,16 +42,14 @@ export class CategoriesController {
   }
 
   @Get(':categoryId')
-  async getTag(@Param('categoryId') categoryId: string) {
-    const id = parseInt(categoryId, 10);
-    const existTag = await this.categoriesService.getCategory(id);
+  async getCategory(@Param('categoryId') categoryId: number) {
+    const existTag = await this.categoriesService.getCategory(categoryId);
     return fillObject(CategoryRDO, existTag);
   }
 
   @Delete(':categoryId')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async destroy(@Param('id') id: string) {
-    const categoryId = parseInt(id, 10);
+  async deleteCategory(@Param('categoryId') categoryId: number) {
     this.categoriesService.deleteCategory(categoryId);
   }
 
@@ -60,9 +58,8 @@ export class CategoriesController {
     status: HttpStatus.OK,
     description: 'Tag updated',
   })
-  async updateTag(@Param('categoryId') categoryId: string, @Body() dto: UpdateCategoryDTO) {
-    const id = parseInt(categoryId, 10);
-    const updatedTag = await this.categoriesService.updateCategory(id, dto);
+  async updateTag(@Param('categoryId') categoryId: number, @Body() dto: UpdateCategoryDTO) {
+    const updatedTag = await this.categoriesService.updateCategory(categoryId, dto);
     return fillObject(CategoryRDO, updatedTag);
   }
 }
