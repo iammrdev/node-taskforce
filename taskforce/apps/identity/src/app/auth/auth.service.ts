@@ -13,12 +13,11 @@ import { UserEntity } from '../users/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) { }
 
   async signup(dto: UserSignUpDTO) {
     const { email, name, surname, password, birthDate } = dto;
     const user = {
-      _id: '',
       email,
       name,
       surname,

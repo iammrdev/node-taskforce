@@ -26,4 +26,4 @@ import { getMongoDbConfig } from '../config/mongodb.config';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
