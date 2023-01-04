@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Category } from '@taskforce/shared-types';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CreateCategoryDTO } from './dto/create-category.dto';
+import { UpdateCategoryDTO } from './dto/update-category.dto';
 import { CategoriesEntity } from './categories.entity';
 import { CategoriesRepository } from './categories.repository';
 
@@ -9,7 +9,7 @@ import { CategoriesRepository } from './categories.repository';
 export class CategoriesService {
   constructor(private readonly categoryRepository: CategoriesRepository) { }
 
-  async createCategory(dto: CreateCategoryDto): Promise<Category> {
+  async createCategory(dto: CreateCategoryDTO): Promise<Category> {
     const categoriesEntity = new CategoriesEntity(dto);
     return this.categoryRepository.create(categoriesEntity);
   }
@@ -26,7 +26,7 @@ export class CategoriesService {
     return this.categoryRepository.find();
   }
 
-  async updateCategory(id: number, dto: UpdateCategoryDto): Promise<Category> {
+  async updateCategory(id: number, dto: UpdateCategoryDTO): Promise<Category> {
     return this.categoryRepository.update(id, new CategoriesEntity(dto));
   }
 }
