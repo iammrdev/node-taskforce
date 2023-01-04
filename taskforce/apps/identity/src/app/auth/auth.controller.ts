@@ -10,7 +10,7 @@ import { UserRDO } from '../users/rdo/user.rdo';
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
@@ -41,7 +41,8 @@ export class AuthController {
     description: 'Password or Login is wrong',
   })
   async signin(@Body() dto: UserSignInDTO) {
-    const verifiedUser = await this.authService.verifyUser(dto);
-    return fillObject(UserSignedRDO, verifiedUser);
+    const user = await this.authService.verifyUser(dto);
+
+    return this.authService.signin(user);
   }
 }
