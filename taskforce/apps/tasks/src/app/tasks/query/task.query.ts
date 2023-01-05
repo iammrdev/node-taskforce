@@ -4,30 +4,30 @@ import { DEFAULT_SORT_DIRECTION, DEFAULT_TASK_COUNT_LIMIT } from '../tasks.const
 import { ApiProperty } from '@nestjs/swagger';
 
 export class TaskQuery {
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @Transform(({ value }) => Number(value) || DEFAULT_TASK_COUNT_LIMIT)
   @IsNumber()
   @IsOptional()
   public limit: number = DEFAULT_TASK_COUNT_LIMIT;
 
-  @ApiProperty()
-  @Transform(({ value }) => value.split(',').map((tagId) => Number(tagId)))
+  @ApiProperty({ required: false })
+  @Transform(({ value }) => value.map((tagId) => Number(tagId)))
   @IsArray()
   @IsOptional()
-  public tags: number[];
+  public tags?: number[];
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @Transform(({ value }) => Number(value))
   @IsNumber()
   @IsOptional()
   public category: number;
 
-  @ApiProperty()
+  @ApiProperty({ enum: ['asc', 'desc'], required: false })
   @IsIn(['asc', 'desc'])
   @IsOptional()
   public sortDirection: 'desc' | 'asc' = DEFAULT_SORT_DIRECTION;
 
-  @ApiProperty()
+  @ApiProperty({ required: false })
   @Transform(({ value }) => Number(value))
   @IsOptional()
   public page: number;

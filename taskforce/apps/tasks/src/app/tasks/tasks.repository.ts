@@ -60,8 +60,8 @@ export class TasksRepository implements CRUDRepository<TasksEntity, number, Task
         }
       },
       take: limit,
-      orderBy: [{ createdAt: sortDirection }],
       skip: page > 0 ? limit * (page - 1) : undefined,
+      orderBy: [{ createdAt: sortDirection }],
       include: {
         category: true,
         comments: true,

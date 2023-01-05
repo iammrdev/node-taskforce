@@ -6,13 +6,11 @@ import { User } from '@taskforce/shared-types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
+  constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('jwt.secret')
+      secretOrKey: configService.get('jwt.secret')
     });
   }
 

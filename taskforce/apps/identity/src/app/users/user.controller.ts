@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, UseG
 import { ApiTags, ApiResponse, ApiProperty } from '@nestjs/swagger';
 import { fillObject } from '@taskforce/core';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { MongoidValidationPipe } from '../pipes/mongoid-validation.pipe';
+import { MongoIdValidationPipe } from '../pipes/mongoid-validation.pipe';
 import { UserRDO } from './rdo/user.rdo';
 import { UserService } from './user.service';
 
@@ -27,7 +27,7 @@ export class UserController {
     status: HttpStatus.NOT_FOUND,
     description: 'User not  found',
   })
-  async getUser(@Param('id', MongoidValidationPipe) id: string) {
+  async getUser(@Param('id', MongoIdValidationPipe) id: string) {
     const existUser = await this.userService.getUser(id);
 
     if (!existUser) {
