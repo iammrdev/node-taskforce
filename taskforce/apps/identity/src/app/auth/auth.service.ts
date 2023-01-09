@@ -1,22 +1,26 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as dayjs from 'dayjs';
-import { User, UserRole } from '@taskforce/shared-types';
+import { CommandEvent, User, UserRole } from '@taskforce/shared-types';
 import { UserRepository } from '../users/user.repository';
 import { UserSignUpDTO } from './dto/user-signup.dto';
 import { UserSignInDTO } from './dto/user-signin.dto';
 import {
+  RABBITMQ_SERVICE,
   USER_EXISTS,
   USER_NOT_FOUND,
   USER_PASSWORD_WRONG,
-} from './auth.constant';
+} from './auth.constants';
 import { UserEntity } from '../users/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    // @tutor: можно ли внедрить другим способом?
+    @Inject(RABBITMQ_SERVICE) private readonly rabbitClient: ClientProxy,
   ) { }
 
   async signup(dto: UserSignUpDTO) {
@@ -39,7 +43,23 @@ export class AuthService {
 
     const userEntity = await new UserEntity(user).setPassword(password);
 
-    return this.userRepository.create(userEntity);
+    const createdUser = await this.userRepository.create(userEntity);
+
+    // @tutor: есть ли какой-то стандарт сообщений? каких принципов стоит придерживаться?
+    // @tutor: основы RabbitMQ на примере management панели
+    // @tutor: почему не используем exchange?
+    this.rabbitClient.emit(
+      // @tutor: cmd это стандарт?
+      { cmd: CommandEvent.AddSubscriber },
+      {
+        email: createdUser.email,
+        name: createdUser.name,
+        surname: createdUser.surname,
+        userId: createdUser._id.toString(),
+      }
+    );
+
+    return createdUser;
   }
 
   async signin(user: User) {
@@ -76,5 +96,4 @@ export class AuthService {
   async getUser(id: string) {
     return this.userRepository.findById(id);
   }
-
 }
