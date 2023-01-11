@@ -1,8 +1,9 @@
 import { Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { UserRole } from '@taskforce/shared-types';
 
-export class UserSignedRDO {
-  @ApiProperty({ description: 'The uniq user ID', example: '13' })
+export class TokenDataRDO {
+  @ApiProperty({ description: 'The uniq user ID', example: '72' })
   @Transform(({ obj }) => obj._id.toString())
   @Expose()
   public _id: string;
@@ -11,11 +12,8 @@ export class UserSignedRDO {
   @Expose()
   public email: string;
 
-  @ApiProperty({ description: 'Access token', example: 'JWT' })
+  @ApiProperty({ description: '', example: '' })
   @Expose()
-  public accessToken: string;
+  public role: UserRole;
 
-  @ApiProperty({ description: 'Refresh token', example: 'JWT' })
-  @Expose()
-  public refreshToken: string;
 }

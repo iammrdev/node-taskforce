@@ -2,19 +2,21 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { User } from '@taskforce/shared-types';
+import { JwtPayload } from '@taskforce/shared-types';
+import { UserInfo } from './user-info.interface';
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtRefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(configService: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get('jwt.secret')
+      secretOrKey: configService.get('jwt.refreshSecret'),
+      passReqToCallback: true
     });
   }
 
-  async validate({ email, avatar, role }: Pick<User, 'email' | 'role' | 'avatar'>) {
-    return { email, avatar, role };
+  async validate({ sub, email, role }: JwtPayload): Promise<UserInfo> {
+    return { email, _id: sub, role };
   }
 }

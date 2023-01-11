@@ -1,32 +1,25 @@
 @baseUrl =  http://localhost:3001
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2I2MDg0N2FiMTIyYTYxMzkxZGE0ZWIiLCJlbWFpbCI6ImlkZW50aXR5QHRlc3QucnUiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJLZWtzIiwic3VybmFtZSI6IlNtaXRoIiwiaWF0IjoxNjcyODc0MDg4LCJleHAiOjE2NzI4NzQxNDh9.7TvaUI0NriTplWPmtxpU061R0UKJxAQ3Adpdz8zGXb8
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkYzE5ODE4YzFkMzMyYzY1N2ViNWEiLCJlbWFpbCI6ImlkZW50aXR5QHRlc3QucnUiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2NzMzODAyNDgsImV4cCI6MTY3MzM4MDMwOH0.DeGckvVTOh8AqH1uyrRxlPSlocWGUK9Nr3mEmbVugzQ
 
-# Create a new user
 POST {{baseUrl}}/api/auth/signup HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "224box@mail.ru",
-  "birthDate": "1987-06-24 08:00:00",
-  "name": "Keks",
-  "surname": "Smith",
-  "password": "123456"
+  "name": "The Keks",
+  "email": "identity2@test.ru",
+  "city": "Москва",
+  "password": "123456",
+  "role": "customer",
+  "birthDate": "1990-12-24"
 }
-
 ###
 
-# Get user by ID
-GET {{baseUrl}}/api/users/63b5e0d0244541c6fdaad3f1 HTTP/1.1
-Authorization: {{token}}
-###
-
-# Login user by email and password
 POST {{baseUrl}}/api/auth/signin HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "identity@test.ru",
-  "password": "123456"
+  "email": "identity2@test.ru",
+  "password": "0123456"
 }
 
 ###

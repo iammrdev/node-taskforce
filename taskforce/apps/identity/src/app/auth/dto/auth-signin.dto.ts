@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
-import { AUTH_USER_EMAIL_NOT_VALID } from '../auth.constants';
 
-export class UserSignInDTO {
+export class AuthSignInDTO {
   @ApiProperty({ description: 'User email', example: 'user@test.local' })
-  @IsEmail({}, { message: AUTH_USER_EMAIL_NOT_VALID })
+  @IsEmail({}, { message: 'Invalid email' })
   public email: string;
 
   @ApiProperty({ description: 'User password', example: '123456' })

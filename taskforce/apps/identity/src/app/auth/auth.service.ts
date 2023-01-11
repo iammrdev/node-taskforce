@@ -1,99 +1,65 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import * as dayjs from 'dayjs';
-import { CommandEvent, User, UserRole } from '@taskforce/shared-types';
-import { UserRepository } from '../users/user.repository';
-import { UserSignUpDTO } from './dto/user-signup.dto';
-import { UserSignInDTO } from './dto/user-signin.dto';
-import {
-  RABBITMQ_SERVICE,
-  USER_EXISTS,
-  USER_NOT_FOUND,
-  USER_PASSWORD_WRONG,
-} from './auth.constants';
-import { UserEntity } from '../users/user.entity';
+import { Inject, Injectable } from '@nestjs/common';
+import { JwtPayload, Token } from '@taskforce/shared-types';
 import { JwtService } from '@nestjs/jwt';
 import { ClientProxy } from '@nestjs/microservices';
+import { TokensRepository } from '../tokens/tokens.repository';
+import { TokensEntity } from '../tokens/tokens.entity';
+import { fillObject } from '@taskforce/core';
+import { TokenRDO } from '../tokens/rdo/token.rdo';
+import { TokenDataDTO } from '../tokens/dto/token-data.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly jwtService: JwtService,
-    // @tutor: можно ли внедрить другим способом?
-    @Inject(RABBITMQ_SERVICE) private readonly rabbitClient: ClientProxy,
+    @Inject('JwtAccessService') private readonly jwtAccessService: JwtService,
+    @Inject('JwtRefreshService') private readonly jwtRefreshService: JwtService,
+    private readonly tokensRepository: TokensRepository,
   ) { }
 
-  async signup(dto: UserSignUpDTO) {
-    const { email, name, surname, password, birthDate } = dto;
-    const user = {
-      email,
-      name,
-      surname,
-      role: UserRole.User,
-      avatar: '',
-      birthDate: dayjs(birthDate).toDate(),
-      passwordHash: '',
-    };
-
-    const existUser = await this.userRepository.findByEmail(email);
-
-    if (existUser) {
-      throw new BadRequestException(USER_EXISTS);
-    }
-
-    const userEntity = await new UserEntity(user).setPassword(password);
-
-    const createdUser = await this.userRepository.create(userEntity);
-
-    // @tutor: есть ли какой-то стандарт сообщений? каких принципов стоит придерживаться?
-    // @tutor: основы RabbitMQ на примере management панели
-    // @tutor: почему не используем exchange?
-    this.rabbitClient.emit(
-      // @tutor: cmd это стандарт?
-      { cmd: CommandEvent.AddSubscriber },
-      {
-        email: createdUser.email,
-        name: createdUser.name,
-        surname: createdUser.surname,
-        userId: createdUser._id.toString(),
-      }
-    );
-
-    return createdUser;
+  private async getAccessTokenInfo(token: string) {
+    return this.jwtAccessService.decode(token) as JwtPayload;
   }
 
-  async signin(user: User) {
+  private async getRefreshTokenInfo(token: string) {
+    return this.jwtRefreshService.decode(token) as JwtPayload;
+  }
+
+  async generateAuthInfo(dto: TokenDataDTO) {
     const payload = {
-      sub: user._id,
-      email: user.email,
-      role: user.role,
-      name: user.name,
-      surname: user.surname
+      sub: dto._id,
+      email: dto.email,
+      role: dto.role,
     };
+
+    const accessToken = await this.jwtAccessService.signAsync(payload);
+
+    const refreshToken = await this.jwtRefreshService.signAsync(payload);
+    const refreshTokenInfo = await this.getRefreshTokenInfo(refreshToken);
+    const refreshTokenEntity = new TokensEntity({ userId: dto._id, exp: new Date(refreshTokenInfo.exp * 1000) });
+
+    await refreshTokenEntity.setToken(refreshToken);
+
+    const existedRefreshToken = await this.tokensRepository.findByUserId(dto._id);
+
+    if (existedRefreshToken) {
+      const { id: refreshTokenId } = fillObject(TokenRDO, existedRefreshToken);
+      await this.tokensRepository.update(refreshTokenId, refreshTokenEntity)
+    } else {
+      await this.tokensRepository.create(refreshTokenEntity);
+    }
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      _id: dto._id,
+      email: dto.email,
+      access_token: accessToken,
+      refresh_token: refreshToken,
     };
   }
 
-  async verifyUser(dto: UserSignInDTO) {
-    const { email, password } = dto;
-    const existUser = await this.userRepository.findByEmail(email);
 
-    if (!existUser) {
-      throw new UnauthorizedException(USER_NOT_FOUND);
-    }
+  async getUserSessionByToken(token: string): Promise<Token | null> {
+    const tokenInfo = await this.getAccessTokenInfo(token);
 
-    const userEntity = new UserEntity(existUser);
-
-    if (!(await userEntity.comparePassword(password))) {
-      throw new UnauthorizedException(USER_PASSWORD_WRONG);
-    }
-
-    return userEntity.toObject();
-  }
-
-  async getUser(id: string) {
-    return this.userRepository.findById(id);
+    return this.tokensRepository.findByUserId(tokenInfo.sub);
   }
 }
