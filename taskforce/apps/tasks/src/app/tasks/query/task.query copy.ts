@@ -1,6 +1,6 @@
 import { IsArray, IsIn, IsNumber, IsOptional } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { DEFAULT_SORT_DIRECTION, DEFAULT_TASK_COUNT_LIMIT } from '../tasks.constants';
+import { DEFAULT_SORT, DEFAULT_TASK_COUNT_LIMIT } from '../tasks.constants';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class TaskQuery {
@@ -11,7 +11,9 @@ export class TaskQuery {
   public limit: number = DEFAULT_TASK_COUNT_LIMIT;
 
   @ApiProperty({ required: false })
-  @Transform(({ value }) => value.map((tagId) => Number(tagId)))
+  @Transform(({ value }) =>
+    (typeof value === 'string' ? [value] : value).map((tagId) => Number(tagId))
+  )
   @IsArray()
   @IsOptional()
   public tags?: number[];
@@ -23,12 +25,17 @@ export class TaskQuery {
   public category: number;
 
   @ApiProperty({ enum: ['asc', 'desc'], required: false })
-  @IsIn(['asc', 'desc'])
+  @IsIn(['createdAt', 'comments', 'responses'])
   @IsOptional()
-  public sortDirection: 'desc' | 'asc' = DEFAULT_SORT_DIRECTION;
+  public sort: 'createdAt' | 'comments' | 'responses' = DEFAULT_SORT;
 
   @ApiProperty({ required: false })
   @Transform(({ value }) => Number(value))
   @IsOptional()
   public page: number;
+
+  @ApiProperty({ enum: ['asc', 'desc'], required: false })
+  @IsIn(['Москва', 'Санкт-Петербург', 'Владивосток'])
+  @IsOptional()
+  public city: 'Москва' | 'Санкт-Петербург' | 'Владивосток';
 }

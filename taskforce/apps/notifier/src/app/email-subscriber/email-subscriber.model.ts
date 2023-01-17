@@ -19,6 +19,9 @@ export class EmailSubscriberModel extends Document implements Subscriber {
   public surname: string;
 
   @Prop()
+  public notifiedDate: Date;
+
+  @Prop()
   public userId: string;
 }
 

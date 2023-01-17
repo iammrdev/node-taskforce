@@ -3,7 +3,7 @@ POST http://localhost:3002/api/categories HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Мобильная разработка"
+  "title": "Верстка 2"
 }
 
 ###

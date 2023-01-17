@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtPayload, Token } from '@taskforce/shared-types';
 import { JwtService } from '@nestjs/jwt';
-import { ClientProxy } from '@nestjs/microservices';
 import { TokensRepository } from '../tokens/tokens.repository';
 import { TokensEntity } from '../tokens/tokens.entity';
 import { fillObject } from '@taskforce/core';
@@ -29,6 +28,7 @@ export class AuthService {
       sub: dto._id,
       email: dto.email,
       role: dto.role,
+      city: dto.city
     };
 
     const accessToken = await this.jwtAccessService.signAsync(payload);

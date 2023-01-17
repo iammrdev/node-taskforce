@@ -1,7 +1,6 @@
 import { Comment } from '@taskforce/shared-types';
 import { Entity } from '@taskforce/core';
 
-
 export class CommentsEntity implements Entity<Comment> {
   public id: number;
   public text: string;
@@ -9,11 +8,11 @@ export class CommentsEntity implements Entity<Comment> {
   public userId: string;
   public createdAt: Date;
 
-  constructor(comment: Comment) {
+  constructor(comment: Partial<Comment>) {
     this.fillEntity(comment);
   }
 
-  public fillEntity(entity: Comment) {
+  public fillEntity(entity: Partial<Comment>) {
     this.id = entity.id;
     this.text = entity.text;
     this.taskId = entity.taskId;
@@ -27,7 +26,7 @@ export class CommentsEntity implements Entity<Comment> {
       text: this.text,
       taskId: this.taskId,
       userId: this.userId,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
     };
   }
 }

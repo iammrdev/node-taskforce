@@ -3,7 +3,7 @@ POST http://localhost:3002/api/tags HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Мобильная разработка"
+  "title": "tag4"
 }
 
 ###

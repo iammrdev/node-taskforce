@@ -12,14 +12,13 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillObject } from '@taskforce/core';
 import { CreateTagDTO } from './dto/create-tag.dto';
-import { UpdateTagDTO } from './dto/update-tag.dto';
 import { TagRDO } from './rdo/tag.rdo';
 import { TagsService } from './tags.service';
 
 @ApiTags('tags')
 @Controller('tags')
 export class TagsController {
-  constructor(private readonly tagsService: TagsService) { }
+  constructor(private readonly tagsService: TagsService) {}
 
   @Post()
   @ApiResponse({
@@ -60,7 +59,7 @@ export class TagsController {
     status: HttpStatus.OK,
     description: 'Tag updated',
   })
-  async updateTag(@Param('tagId') tagId: number, @Body() dto: UpdateTagDTO) {
+  async updateTag(@Param('tagId') tagId: number, @Body() dto: CreateTagDTO) {
     const updatedTag = await this.tagsService.updateTag(tagId, dto);
 
     return fillObject(TagRDO, updatedTag);

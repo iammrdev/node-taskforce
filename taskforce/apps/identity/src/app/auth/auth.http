@@ -5,8 +5,8 @@ POST {{baseUrl}}/api/auth/signup HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "The Keks",
-  "email": "identity2@test.ru",
+  "name": "The Fish",
+  "email": "identityw@test.ru",
   "city": "Москва",
   "password": "123456",
   "role": "customer",
@@ -18,8 +18,8 @@ POST {{baseUrl}}/api/auth/signin HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "identity2@test.ru",
-  "password": "0123456"
+  "email": "identityw@test.ru",
+  "password": "123456"
 }
 
 ###

@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CommandEvent, User } from '@taskforce/shared-types';
+import { CommandEvent, User, UserRole } from '@taskforce/shared-types';
 import { USER_NOT_FOUND, USER_PASSWORD_WRONG } from './user.constants';
 import { AuthSignInDTO } from '../auth/dto/auth-signin.dto';
 import { AuthSignUpDTO } from '../auth/dto/auth-signup.dto';
@@ -15,7 +15,7 @@ export class UserService {
     private readonly userRepository: UserRepository,
     @Inject('RABBITMQ_SERVICE') private readonly rabbitClient: ClientProxy,
   ) { }
-
+  z
   async createUser(dto: AuthSignUpDTO): Promise<User | null> {
     const existedUser = await this.userRepository.findByEmail(dto.email);
 
@@ -30,15 +30,18 @@ export class UserService {
     // @tutor: есть ли какой-то стандарт сообщений? каких принципов стоит придерживаться?
     // @tutor: основы RabbitMQ на примере management панели
     // @tutor: почему не используем exchange?
-    this.rabbitClient.emit(
-      // @tutor: cmd это стандарт?
-      { cmd: CommandEvent.AddSubscriber },
-      {
-        email: createdUser.email,
-        name: createdUser.name,
-        userId: createdUser._id.toString(),
-      }
-    );
+
+    if (createdUser.role === UserRole.Performer) {
+      this.rabbitClient.emit(
+        // @tutor: cmd это стандарт?
+        { cmd: CommandEvent.AddSubscriber },
+        {
+          email: createdUser.email,
+          name: createdUser.name,
+          userId: createdUser._id.toString(),
+        }
+      );
+    }
 
     return createdUser;
   }

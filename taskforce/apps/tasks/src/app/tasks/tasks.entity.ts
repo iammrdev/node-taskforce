@@ -1,19 +1,27 @@
-import { Comment, Tag, Task, TaskStatus } from '@taskforce/shared-types';
+import {
+  Tag,
+  Comment,
+  Task,
+  TaskStatus,
+  UserCity,
+} from '@taskforce/shared-types';
 import { Entity } from '@taskforce/core';
 
-
 export class TasksEntity implements Entity<Task> {
-  public id: number;
+  public id?: number;
   public title: string;
   public description: string;
   public categoryId: number;
   public status: TaskStatus;
   public price: number;
   public image: string;
+  public city: UserCity;
   public address: string;
   public tags: Tag[];
   public userId: string;
-  public comments: Comment[];
+  public performerId: string;
+  public comments?: Comment[];
+  public responses?: string[];
   public createdAt: Date;
 
   constructor(task: Task) {
@@ -27,11 +35,14 @@ export class TasksEntity implements Entity<Task> {
     this.categoryId = entity.categoryId;
     this.status = entity.status;
     this.price = entity.price;
-    this.image = entity.image;
+    this.image = entity.image || '';
+    this.city = entity.city;
     this.address = entity.address;
-    this.tags = entity.tags;
+    this.tags = entity.tags || [];
     this.userId = entity.userId;
+    this.performerId = entity.performerId;
     this.comments = entity.comments || [];
+    this.responses = entity.responses || [];
     this.createdAt = new Date();
   }
 
@@ -44,11 +55,14 @@ export class TasksEntity implements Entity<Task> {
       status: this.status,
       price: this.price,
       image: this.image,
+      city: this.city,
       address: this.address,
       tags: this.tags,
-      userId: this.userId,
       comments: this.comments,
-      createdAt: this.createdAt
+      responses: this.responses,
+      userId: this.userId,
+      performerId: this.performerId,
+      createdAt: this.createdAt,
     };
   }
 }

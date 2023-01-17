@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { NOTIFIER_SERVICE_ENV_PATH } from './app.constants';
 import { getMongoDbConfig, mongoDbOptions } from '../config/mongodb.config';
@@ -22,7 +20,7 @@ import { EmailSubscriberModule } from './email-subscriber/email-subscriber.modul
     MongooseModule.forRootAsync(getMongoDbConfig()),
     EmailSubscriberModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule { }

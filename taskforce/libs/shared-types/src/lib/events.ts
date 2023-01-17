@@ -1,5 +1,5 @@
 export enum CommandEvent {
   AddSubscriber = 'addSubscriber',
-  AddTask = 'addTask',
-  AddNotification = 'addNotifiaction'
+  NotifyTasks = 'notifyTasks',
+  NewTasks = 'newTasks'
 }

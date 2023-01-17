@@ -1,6 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserRole } from '@taskforce/shared-types';
+import { UserCity, UserRole } from '@taskforce/shared-types';
 
 export class TokenDataRDO {
   @ApiProperty({ description: 'The uniq user ID', example: '72' })
@@ -16,4 +16,7 @@ export class TokenDataRDO {
   @Expose()
   public role: UserRole;
 
+  @ApiProperty({ description: '', example: '' })
+  @Expose()
+  public city: UserCity;
 }

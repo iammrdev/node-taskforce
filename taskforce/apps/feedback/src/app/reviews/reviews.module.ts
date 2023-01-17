@@ -4,8 +4,9 @@ import { ReviewsRepository } from './reviews.repository';
 import { ReviewsService } from './reviews.service';
 
 @Module({
+  imports: [],
   controllers: [ReviewsController],
   providers: [ReviewsService, ReviewsRepository],
   exports: [ReviewsRepository],
 })
-export class ReviewsModule { }
+export class ReviewsModule {}

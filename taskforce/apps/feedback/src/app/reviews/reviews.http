@@ -1,0 +1,33 @@
+@baseUrl =  http://localhost:3003
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2MyZGNiYmFiMTlkOWU2ZDNiMjkyZDIiLCJlbWFpbCI6ImlkZW50aXR5QHRlc3QucnUiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2NzM3MzU1ODksImV4cCI6MTY3MzczNjE4OX0.a4CL3O53EcKRXaqYJyCoOxQFkSTqOugNAZr1Tj_N8Ag
+
+# Create a new review
+POST {{baseUrl}}/api/tasks/5/reviews HTTP/1.1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "text": "Супер! Спасибо! Супер! Спасибо! Супер! Спасибо!Супер! Спасибо!Супер! Спасибо!",
+  "rating": 2
+}
+
+###
+
+# Delete review by id
+DELETE {{baseUrl}}/api/tasks/1/reviews/9 HTTP/1.1
+Authorization: {{token}}
+
+###
+
+# Update the review
+PUT {{baseUrl}}/api/tasks/1/reviews/10 HTTP/1.1
+Authorization: {{token}}
+Content-Type: application/json
+
+{
+  "text": "Это просто супер!",
+  "rating": 2
+}
+
+
+###

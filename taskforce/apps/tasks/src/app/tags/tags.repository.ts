@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TagsRepository implements CRUDRepository<TagsEntity, number, Tag> {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   public async create(item: TagsEntity): Promise<Tag> {
     return this.prisma.tag.create({
@@ -23,6 +23,12 @@ export class TagsRepository implements CRUDRepository<TagsEntity, number, Tag> {
   public findById(id: number): Promise<Tag | null> {
     return this.prisma.tag.findFirst({
       where: { id },
+    });
+  }
+
+  public findByTitle(title: string): Promise<Tag | null> {
+    return this.prisma.tag.findFirst({
+      where: { title },
     });
   }
 

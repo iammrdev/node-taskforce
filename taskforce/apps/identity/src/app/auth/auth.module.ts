@@ -3,9 +3,8 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../users/user.module';
 import { PassportModule } from '@nestjs/passport';
-import { JwtAccessModule } from '../jwt/jwt-access.module';
-import { JwtRefreshModule } from '../jwt/jwt-refresh.module';
 import { TokensModule } from '../tokens/tokens.module';
+import { JwtAccessModule, JwtRefreshModule } from '@taskforce/core';
 
 @Module({
   imports: [
@@ -17,6 +16,6 @@ import { TokensModule } from '../tokens/tokens.module';
   ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: []
+  exports: [],
 })
-export class AuthModule { }
+export class AuthModule {}

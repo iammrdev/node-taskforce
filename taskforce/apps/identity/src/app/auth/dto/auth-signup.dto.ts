@@ -2,8 +2,16 @@ import { ApiProperty } from '@nestjs/swagger';
 import { UserCity, UserRole } from '@taskforce/shared-types';
 import { Transform } from 'class-transformer';
 import * as dayjs from 'dayjs';
-import { IsDate, IsEmail, IsEnum, IsString, Length, Validate, ValidatorConstraint, ValidatorConstraintInterface } from 'class-validator';
-
+import {
+  IsDate,
+  IsEmail,
+  IsEnum,
+  IsString,
+  Length,
+  Validate,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+} from 'class-validator';
 
 @ValidatorConstraint({ name: 'invalid age', async: false })
 export class AgeValidator implements ValidatorConstraintInterface {
@@ -39,7 +47,7 @@ export class AuthSignUpDTO {
   @IsEnum(UserRole, { message: 'role must be valid' })
   public role: UserRole;
 
-  @ApiProperty({ description: 'User avatar', example: '' })
+  @ApiProperty({ description: 'User avatar', example: 'avatar.png' })
   public avatar: string;
 
   @ApiProperty({ description: 'User date birth', example: '1981-03-12' })
@@ -47,6 +55,4 @@ export class AuthSignUpDTO {
   @Validate(AgeValidator, { message: 'Invalid date birth' })
   @Transform(({ value }) => new Date(value))
   public birthDate: Date;
-
-
 }

@@ -1,9 +1,8 @@
-import { Body, Controller, createParamDecorator, ExecutionContext, Get, HttpStatus, NotFoundException, Param, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, HttpStatus, MaxFileSizeValidator, NotFoundException, Param, ParseFilePipe, Patch, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { multerOptions, fillObject, JwtAccessTokenGuard, MongoIdValidationPipe, UserInfoPipe } from '@taskforce/core';
+import { fillObject, JwtAccessTokenGuard, MongoIdValidationPipe, UserInfoPipe, UserInfo } from '@taskforce/core';
 import { UserSignedRDO } from '../auth/rdo/user-signed.rdo';
-import { UserInfo } from '../jwt/strategies/user-info.interface';
 import { UserUpdatePasswordDTO } from './dto/user-update-password.dto';
 import { UserUpdateDTO } from './dto/user-update.dto';
 import { UserRDO } from './rdo/user.rdo';
@@ -32,14 +31,13 @@ export class UserController {
   @ApiResponse({ type: UserSignedRDO, status: HttpStatus.OK, description: 'User data has been successfully updated' })
   @Patch()
   @UseGuards(JwtAccessTokenGuard)
-  @UseInterceptors(FileInterceptor('avatar', multerOptions))
   public async updateUserData(@UserInfoPipe() user: UserInfo, @Body() dto: UserUpdateDTO) {
     const updatedUser = await this.userService.update(user._id, dto);
 
     return fillObject(UserRDO, updatedUser);
   }
 
-  @ApiBody({ type: UserUpdateDTO, description: 'Upload user avatar' })
+  @ApiBody({ type: UserUpdateDTO, description: 'Update user password' })
   @ApiResponse({ type: UserSignedRDO, status: HttpStatus.OK, description: 'User password has been successfully updated' })
   @Patch('password')
   @UseGuards(JwtAccessTokenGuard)
@@ -53,10 +51,18 @@ export class UserController {
   @ApiResponse({ type: UserSignedRDO, status: HttpStatus.OK, description: 'User avatar has been successfully uploaded' })
   @Post('avatars')
   @UseGuards(JwtAccessTokenGuard)
-  @UseInterceptors(FileInterceptor('avatar', multerOptions))
-  public async uploadUserAvatar(@UserInfoPipe() user: UserInfo, @UploadedFile() file: Express.Multer.File) {
-    const dto = { avatar: file.path };
-    const updatedUser = await this.userService.update(user._id, dto);
+  @UseInterceptors(FileInterceptor('avatar'))
+  public async uploadUserAvatar(@UserInfoPipe() user: UserInfo, @UploadedFile(
+    new ParseFilePipe({
+      validators: [
+        new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+        new FileTypeValidator({ fileType: /image\/(jpeg|png)$/ }),
+      ],
+    })
+  )
+  file: Express.Multer.File) {
+    const imagePath = `http://${process.env.HOST}:${process.env.PORT}/aws/${file.filename}`;
+    const updatedUser = await this.userService.update(user._id, { avatar: imagePath });
 
     return fillObject(UserRDO, updatedUser);
   }

@@ -1,15 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+} from '@nestjs/common';
 import { Tag } from '@taskforce/shared-types';
 import { CreateTagDTO } from './dto/create-tag.dto';
-import { UpdateTagDTO } from './dto/update-tag.dto';
 import { TagsEntity } from './tags.entity';
 import { TagsRepository } from './tags.repository';
 
 @Injectable()
 export class TagsService {
-  constructor(private readonly tagsRepository: TagsRepository) { }
+  constructor(private readonly tagsRepository: TagsRepository) {}
 
   async createTag(dto: CreateTagDTO): Promise<Tag> {
+    const existedTag = await this.tagsRepository.findByTitle(dto.title);
+
+    if (existedTag) {
+      throw new BadRequestException('Tag is existed');
+    }
+
     const tagsEntity = new TagsEntity(dto);
     return this.tagsRepository.create(tagsEntity);
   }
@@ -26,7 +34,7 @@ export class TagsService {
     return this.tagsRepository.find();
   }
 
-  async updateTag(id: number, dto: UpdateTagDTO): Promise<Tag> {
+  async updateTag(id: number, dto: CreateTagDTO): Promise<Tag> {
     return this.tagsRepository.update(id, new TagsEntity(dto));
   }
 }

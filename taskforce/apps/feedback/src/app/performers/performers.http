@@ -1,0 +1,9 @@
+@baseUrl =  http://localhost:3003
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2MyZGNiYmFiMTlkOWU2ZDNiMjkyZDIiLCJlbWFpbCI6ImlkZW50aXR5QHRlc3QucnUiLCJyb2xlIjoiY3VzdG9tZXIiLCJpYXQiOjE2NzM3MjU3MzQsImV4cCI6MTY3MzcyNjMzNH0.Wd6JU0sXyFyhz6MALqrp18Vv6QTAe5ZiUo8Ss3G7ncU
+
+###
+
+# Get reviews
+GET {{baseUrl}}/api/performers/63c2dcbbab19d9e6d3b292d2?failedTasks=0 HTTP/1.1
+
+###
