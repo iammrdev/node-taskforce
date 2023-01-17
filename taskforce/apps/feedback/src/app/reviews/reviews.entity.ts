@@ -1,7 +1,6 @@
 import { Review } from '@taskforce/shared-types';
 import { Entity } from '@taskforce/core';
 
-
 export class ReviewsEntity implements Entity<Review> {
   public id?: number;
   public text: string;
@@ -10,11 +9,11 @@ export class ReviewsEntity implements Entity<Review> {
   public userId: string;
   public createdAt: Date;
 
-  constructor(task: Review) {
+  constructor(task: Partial<Review>) {
     this.fillEntity(task);
   }
 
-  public fillEntity(entity: Review) {
+  public fillEntity(entity: Partial<Review>) {
     this.id = entity.id;
     this.text = entity.text;
     this.taskId = entity.taskId;
@@ -30,7 +29,7 @@ export class ReviewsEntity implements Entity<Review> {
       taskId: this.taskId,
       rating: this.rating,
       userId: this.userId,
-      createdAt: this.createdAt
+      createdAt: this.createdAt,
     };
   }
 }

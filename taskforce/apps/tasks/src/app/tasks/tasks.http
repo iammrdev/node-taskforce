@@ -1,35 +1,85 @@
+@baseUrl =  http://localhost:3002
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M0ODEyZjg4ZTlkZjUzOWViNTE1ODciLCJlbWFpbCI6ImlkZW50aXR5NEB0ZXN0LnJ1Iiwicm9sZSI6InBlcmZvcm1lciIsImNpdHkiOiLQnNC-0YHQutCy0LAiLCJpYXQiOjE2NzM5MTE3NTMsImV4cCI6MTY3Mzk3MTc1M30.VDViLoMhGAIncqa4X_pLfkhi73MFBYXwVioIJvtiYl0
+@token2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M1ZGUwZmJkM2M1MmVkM2I2YTFkNDYiLCJlbWFpbCI6ImlkZW50aXR5d0B0ZXN0LnJ1Iiwicm9sZSI6ImN1c3RvbWVyIiwiY2l0eSI6ItCc0L7RgdC60LLQsCIsImlhdCI6MTY3MzkxMTgzNiwiZXhwIjoxNjczOTcxODM2fQ.DSqSN4yyAgg7DwQF3GW819opKA3bEsFlY19C5G2T7ls
+@token3 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M0ODEyZjg4ZTlkZjUzOWViNTE1ODciLCJlbWFpbCI6ImlkZW50aXR5NEB0ZXN0LnJ1Iiwicm9sZSI6InBlcmZvcm1lciIsImNpdHkiOiLQnNC-0YHQutCy0LAiLCJpYXQiOjE2NzM4MjI1MzAsImV4cCI6MTY3Mzg4MjUzMH0.R0dJEVNk2HOYJG-kAnvmAqoy-68byedylJVx34TjLdw
+
 # Create a new task
-POST http://localhost:3002/api/tasks HTTP/1.1
+POST {{baseUrl}}/api/tasks HTTP/1.1
+Authorization: {{token2}}
 Content-Type: application/json
 
 {
-  "title": "Мобильная разработка"
+  "title": "Разработать калькулятор на JS 2",
+  "description": "Разработать калькулятор на JS. Необходим простой калькулятор с базовыми операциями (сложение, вычитание, умножение, деление). Результат предоставить ввиде ссылки на гитхаб-репозиторий",
+  "categoryId": 1,
+  "category": 1,
+  "price": 5000,
+  "deadline": "2023-03-12",
+  "address": "Москва, ул. Сельскохозяйственная",
+  "tags": [1, 2],
+  "userId": "63bdd579a1498bd4c39e868a"
 }
-
-###
-
-# Delete task by id
-DELETE http://localhost:3002/api/tasks/3 HTTP/1.1
 
 ###
 
 # Get task by id
-GET http://localhost:3002/api/tasks/1 HTTP/1.1
+GET {{baseUrl}}/api/tasks/1 HTTP/1.1
 
 ###
 
 # Get all tasks
-GET http://localhost:3002/api/tasks HTTP/1.1
-
+GET {{baseUrl}}/api/tasks?sort=responses HTTP/1.1
+Authorization: {{token3}}
 ###
 
-# Update the task by id
-PATCH http://localhost:3002/api/tasks/1 HTTP/1.1
+
+# Get my tasks
+GET {{baseUrl}}/api/tasks/my HTTP/1.1
+Authorization: {{token}}
+###
+
+# Take response
+POST {{baseUrl}}/api/tasks/3/response HTTP/1.1
+Authorization: {{token3}}
+###
+
+# Cancel task
+POST {{baseUrl}}/api/tasks/1/cancel HTTP/1.1
+Authorization: {{token2}}
+###
+
+# Progress task
+POST {{baseUrl}}/api/tasks/3/progress HTTP/1.1
+Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "title": "Написать скрипт калькулятора"
+  "performerId": "63c446e1cbac5364d96a2195"
 }
+###
 
+# Done task
+POST {{baseUrl}}/api/tasks/3/done HTTP/1.1
+Authorization: {{token}}
+
+###
+
+# Failed task
+POST {{baseUrl}}/api/tasks/3/failed HTTP/1.1
+Authorization: {{token2}}
+
+###
+
+# Upload Image
+POST {{baseUrl}}/api/tasks/1/image
+Authorization: {{token}}
+Content-Type: multipart/form-data; boundary=Upload
+
+--Upload
+Content-Disposition: form-data; name="file"; filename="1.png"
+Content-Type: image/png
+
+< ./1.png
+--Upload--
 
 ###

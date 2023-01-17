@@ -12,14 +12,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum TaskStatus {
-  CREATED
-  CANCELLED
-  PENDING
-  DONE
-  FAILED
-}
-
 model Task {
   id          Int    @id @default(autoincrement())
   title       String
@@ -28,20 +20,25 @@ model Task {
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id])
 
-  status  TaskStatus @default(CREATED)
-  price   Int
-  image   String
-  address String
+  status String
+  price  Int?
+  image  String?
+
+  city    String  @default("Москва")
+  address String?
+
+  userId      String
+  performerId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   tags        Tag[]
   TagsOnTasks TagsOnTasks[]
 
   comments Comment[]
 
-  userId String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  responses String[]
 }
 
 model Category {
@@ -59,11 +56,11 @@ model Tag {
 }
 
 model TagsOnTasks {
-  taskId Int
   task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
 
-  tagId Int
   tag   Tag @relation(fields: [tagId], references: [id])
+  tagId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

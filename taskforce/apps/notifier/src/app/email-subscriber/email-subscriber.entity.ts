@@ -7,6 +7,7 @@ export class EmailSubscriberEntity implements Entity<Subscriber> {
   public name: string;
   public surname: string;
   public userId: string;
+  public notifiedDate?: Date;
 
   constructor(emailSubscriber: Subscriber) {
     this.fillEntity(emailSubscriber);
@@ -17,6 +18,7 @@ export class EmailSubscriberEntity implements Entity<Subscriber> {
     this.userId = entity.userId;
     this.surname = entity.surname;
     this.name = entity.name;
+    this.notifiedDate = entity.notifiedDate;
     this.id = entity.id ?? '';
   }
 
@@ -27,6 +29,7 @@ export class EmailSubscriberEntity implements Entity<Subscriber> {
       name: this.name,
       surname: this.surname,
       userId: this.userId,
+      notifiedDate: this.notifiedDate
     };
   }
 }

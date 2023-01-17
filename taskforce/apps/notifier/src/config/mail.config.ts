@@ -11,6 +11,17 @@ export const mailOptions = registerAs('mail', () => ({
   from: process.env.MAIL_FROM,
 }));
 
+const getTasks = (context, options) => {
+
+  if (!context.length) {
+    return 'Нет новых задач';
+  }
+
+  console.log({ context })
+
+  return context.reduce((acc, item) => acc + options.fn(item), '')
+};
+
 // @tutor: в чем идея выделения отдельно всех этих конфигов?
 export function getMailConfig(): MailerAsyncOptions {
   return {
@@ -29,7 +40,7 @@ export function getMailConfig(): MailerAsyncOptions {
       },
       template: {
         dir: path.resolve(__dirname, 'assets'),
-        adapter: new HandlebarsAdapter(),
+        adapter: new HandlebarsAdapter({ 'tasks': getTasks }),
         options: {
           strict: true
         }

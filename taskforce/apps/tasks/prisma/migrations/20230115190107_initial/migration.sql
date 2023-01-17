@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Task" ADD COLUMN     "city" TEXT NOT NULL DEFAULT 'Москва',
+ALTER COLUMN "status" DROP DEFAULT;

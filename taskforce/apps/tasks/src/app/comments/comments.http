@@ -1,31 +1,35 @@
+@baseUrl =  http://localhost:3002
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M0ODEyZjg4ZTlkZjUzOWViNTE1ODciLCJlbWFpbCI6ImlkZW50aXR5NEB0ZXN0LnJ1Iiwicm9sZSI6InBlcmZvcm1lciIsImNpdHkiOiLQnNC-0YHQutCy0LAiLCJpYXQiOjE2NzM4OTU5NzksImV4cCI6MTY3Mzk1NTk3OX0.buFI5PpXV_B8ENY4XsPOH_xkRoZr4hE-1HCDIYvYCtA
+
+
 # Create a new comment
-POST http://localhost:3002/api/tasks/1/comments HTTP/1.1
+POST {{baseUrl}}/api/tasks/1/comments HTTP/1.1
+Authorization: {{token}}
 Content-Type: application/json
 
 {
-  "text": "Супер!",
-  "userId": "1"
+  "text": "Супер! Спасибо!"
 }
 
 ###
 
 # Delete comment by id
-DELETE http://localhost:3002/api/tasks/1/comments/1 HTTP/1.1
-
+DELETE {{baseUrl}}/api/tasks/1/comments/9 HTTP/1.1
+Authorization: {{token}}
 ###
 
 # Get comments
-GET http://localhost:3002/api/tasks/1/comments HTTP/1.1
+GET {{baseUrl}}/api/tasks/1/comments?limit=5&page=1 HTTP/1.1
 
 ###
 
 # Update the comment
-PUT http://localhost:3002/api/tasks/1/comments/5 HTTP/1.1
+PUT {{baseUrl}}/api/tasks/1/comments/10 HTTP/1.1
 Content-Type: application/json
 
 {
   "text": "Это просто супер!",
-  "userId": "1"
+  "userId": "22"
 }
 
 

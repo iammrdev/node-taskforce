@@ -56,10 +56,10 @@ export class CategoriesController {
   @Patch(':categoryId')
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Tag updated',
+    description: 'Category updated',
   })
-  async updateTag(@Param('categoryId') categoryId: number, @Body() dto: UpdateCategoryDTO) {
-    const updatedTag = await this.categoriesService.updateCategory(categoryId, dto);
-    return fillObject(CategoryRDO, updatedTag);
+  async updateCategory(@Param('categoryId') categoryId: number, @Body() dto: UpdateCategoryDTO) {
+    const updatedCategory = await this.categoriesService.updateCategory(categoryId, dto);
+    return fillObject(CategoryRDO, updatedCategory);
   }
 }

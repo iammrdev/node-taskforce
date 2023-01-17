@@ -1,7 +1,7 @@
 
 
 @baseUrl =  http://localhost:3001
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2JkZDU3OWExNDk4YmQ0YzM5ZTg2OGEiLCJlbWFpbCI6ImlkZW50aXR5MkB0ZXN0LnJ1Iiwicm9sZSI6ImN1c3RvbWVyIiwiaWF0IjoxNjczMzk0NjE3LCJleHAiOjE2NzMzOTUyMTd9.Dyk8OArzewcsBPtUSkpeTDeB3w74ZsgQuP0yYSnZoZc
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M0ODEyZjg4ZTlkZjUzOWViNTE1ODciLCJlbWFpbCI6ImlkZW50aXR5NEB0ZXN0LnJ1Iiwicm9sZSI6InBlcmZvcm1lciIsImNpdHkiOiLQnNC-0YHQutCy0LAiLCJpYXQiOjE2NzM5MTE3NTMsImV4cCI6MTY3Mzk3MTc1M30.VDViLoMhGAIncqa4X_pLfkhi73MFBYXwVioIJvtiYl0
 
 
 GET {{baseUrl}}/api/users/63bdd579a1498bd4c39e868a HTTP/1.1
@@ -40,7 +40,7 @@ Content-Type: multipart/form-data; boundary=WebKitFormBoundary
 Content-Disposition: form-data; name="avatar"; filename="avatar.png"
 Content-Type: image/png
 
-< ./avatar.png
+< ./1.png
 --WebKitFormBoundary--
 
 ###

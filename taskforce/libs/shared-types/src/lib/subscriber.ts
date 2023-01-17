@@ -1,7 +1,8 @@
 export interface Subscriber {
-  id?: string;
+  _id?: string;
   email: string;
   name: string;
   surname: string;
   userId: string;
+  notifiedDate?: Date;
 }

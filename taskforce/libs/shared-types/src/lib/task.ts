@@ -1,7 +1,14 @@
 import { Tag } from './tag';
 import { Comment } from './comment';
+import { UserCity } from './user';
 
-export type TaskStatus = "CREATED" | "CANCELLED" | "PENDING" | "DONE" | "FAILED"
+export enum TaskStatus {
+  CREATED = 'CREATED',
+  CANCELLED = 'CANCELLED',
+  PROGRESS = 'PROGRESS',
+  DONE = 'DONE',
+  FAILED = 'FAILED',
+}
 
 export interface Task {
   id?: number;
@@ -9,11 +16,14 @@ export interface Task {
   description: string;
   categoryId: number;
   status: TaskStatus;
-  price: number;
-  image: string;
-  address: string;
-  tags: Tag[];
+  price?: number;
+  image?: string;
+  city: UserCity;
+  address?: string;
+  tags?: Tag[];
+  responses: string[];
+  comments?: Comment[];
   userId: string;
-  comments: Comment[];
+  performerId?: string;
   createdAt?: Date;
 }

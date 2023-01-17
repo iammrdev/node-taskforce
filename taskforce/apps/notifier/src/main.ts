@@ -14,6 +14,10 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
 
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+
+
   const configService = app.get<ConfigService>(ConfigService);
   // @tutor: подробнее о принципе подключения микросервисов в bootstrap
   app.connectMicroservice(getRabbitMqConfig(configService));
@@ -29,8 +33,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
 
-  const globalPrefix = 'api';
-  app.setGlobalPrefix(globalPrefix);
 
   const port = process.env.PORT || 3004;
   await app.listen(port);

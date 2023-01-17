@@ -1,8 +1,9 @@
-import { UserRole } from '@taskforce/shared-types';
+import { UserCity, UserRole } from '@taskforce/shared-types';
 
 export interface JwtPayload {
   email: string;
-  role: UserRole
+  role: UserRole;
   sub: string;
-  exp: number
+  exp: number;
+  city: UserCity;
 }

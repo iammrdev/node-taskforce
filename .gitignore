@@ -10,6 +10,7 @@
 coverage
 *.log
 Notes.md
+Tasks.md
 
 taskforce/node_modules/
 taskforce/dist/

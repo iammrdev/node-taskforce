@@ -8,4 +8,4 @@ import { CommentsService } from './comments.service';
   providers: [CommentsService, CommentsRepository],
   exports: [CommentsRepository],
 })
-export class CommentsModule { }
+export class CommentsModule {}

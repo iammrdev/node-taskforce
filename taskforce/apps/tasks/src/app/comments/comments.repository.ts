@@ -3,10 +3,13 @@ import { CommentsEntity } from '../comments/comments.entity';
 import { Comment } from '@taskforce/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { CommentsQuery } from './query/comments.query';
 
 @Injectable()
-export class CommentsRepository implements CRUDRepository<CommentsEntity, number, Comment> {
-  constructor(private readonly prisma: PrismaService) { }
+export class CommentsRepository
+  implements CRUDRepository<CommentsEntity, number, Comment>
+{
+  constructor(private readonly prisma: PrismaService) {}
 
   public async create(entity: CommentsEntity): Promise<Comment> {
     return this.prisma.comment.create({
@@ -26,9 +29,12 @@ export class CommentsRepository implements CRUDRepository<CommentsEntity, number
     });
   }
 
-  public findByTask(taskId: number): Promise<Comment[]> {
+  public findByTask(taskId: number, query?: CommentsQuery): Promise<Comment[]> {
     return this.prisma.comment.findMany({
       where: { taskId },
+      take: query.limit,
+      skip: query.page > 0 ? query.limit * (query.page - 1) : undefined,
+      orderBy: [{ createdAt: query.sortDirection }],
     });
   }
 

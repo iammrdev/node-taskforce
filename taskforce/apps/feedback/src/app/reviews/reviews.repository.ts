@@ -5,15 +5,17 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ReviewsRepository implements CRUDRepository<ReviewsEntity, number, Review> {
-  constructor(private readonly prisma: PrismaService) { }
+export class ReviewsRepository
+  implements CRUDRepository<ReviewsEntity, number, Review>
+{
+  constructor(private readonly prisma: PrismaService) {}
 
   public async create(entity: ReviewsEntity): Promise<Review> {
     const entityData = entity.toObject();
 
     return this.prisma.review.create({
-      data: entityData
-    })
+      data: entityData,
+    });
   }
 
   public async delete(id: number): Promise<void> {
@@ -34,12 +36,18 @@ export class ReviewsRepository implements CRUDRepository<ReviewsEntity, number, 
     });
   }
 
+  public findByUser(userId: string): Promise<Review[]> {
+    return this.prisma.review.findMany({
+      where: { userId },
+    });
+  }
+
   public update(id: number, entity: ReviewsEntity): Promise<Review> {
     const entityData = entity.toObject();
 
     return this.prisma.review.update({
       where: { id },
-      data: entityData
+      data: entityData,
     });
   }
 }

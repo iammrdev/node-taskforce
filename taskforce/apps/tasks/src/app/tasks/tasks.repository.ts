@@ -1,33 +1,47 @@
-import { CRUDRepository } from '@taskforce/core';
+import { CRUDRepository, UserInfo } from '@taskforce/core';
 import { TasksEntity } from './tasks.entity';
-import { Task } from '@taskforce/shared-types';
+import { Task, UserRole } from '@taskforce/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { TaskQuery } from './query/task.query';
+import { TaskMyQuery } from './query/task-my.query';
+import { TaskQuery } from './query/task.query copy';
 
 @Injectable()
-export class TasksRepository implements CRUDRepository<TasksEntity, number, Task> {
+export class TasksRepository
+  implements CRUDRepository<TasksEntity, number, Task>
+{
   constructor(private readonly prisma: PrismaService) { }
 
   public async create(entity: TasksEntity): Promise<Task> {
     const entityData = entity.toObject();
 
-    return this.prisma.task.create({
+    const task = await this.prisma.task.create({
       data: {
-        ...entityData,
-        comments: {
-          connect: []
-        },
+        title: entityData.title,
+        description: entityData.description,
+        status: entityData.status,
+        price: entityData.price,
+        image: entityData.image,
+        city: entityData.city,
+        address: entityData.address,
+        categoryId: entityData.categoryId,
+        userId: entityData.userId,
+        responses: entityData.responses,
         tags: {
-          connect: entityData.tags.map(({ id }) => ({ id }))
-        }
+          connect: entityData.tags.map(({ id }) => ({ id })),
+        },
+        comments: {
+          connect: [],
+        },
       },
       include: {
         category: true,
+        tags: true,
         comments: true,
-        tags: true
-      }
+      },
     });
+
+    return task as Task;
   }
 
   public async delete(id: number): Promise<void> {
@@ -36,60 +50,107 @@ export class TasksRepository implements CRUDRepository<TasksEntity, number, Task
     });
   }
 
-  public findById(id: number): Promise<Task | null> {
-    return this.prisma.task.findFirst({
+  public async findById(id: number): Promise<Task | null> {
+    const task = await this.prisma.task.findFirst({
       where: { id },
       include: {
         category: true,
+        tags: true,
         comments: true,
-        tags: true
-      }
+      },
     });
+
+    return task as Task | null;
   }
 
-  public find({ limit, tags, category, sortDirection, page }: TaskQuery): Promise<Task[]> {
-    return this.prisma.task.findMany({
+  public async find({
+    limit,
+    tags,
+    category,
+    sort,
+    page,
+    city,
+  }: TaskQuery): Promise<Task[]> {
+    const tasks = await this.prisma.task.findMany({
       where: {
         categoryId: category,
+        city,
         tags: {
           some: {
             id: {
-              in: tags
-            }
-          }
-        }
+              in: tags,
+            },
+          },
+        },
       },
       take: limit,
       skip: page > 0 ? limit * (page - 1) : undefined,
-      orderBy: [{ createdAt: sortDirection }],
+      // responses => [1, 2, 3]
+      orderBy: [{ title: 'desc' }],
       include: {
         category: true,
+        tags: true,
         comments: true,
-        tags: true
-      }
+      },
     });
+
+    return tasks as Task[];
   }
 
-  public update(id: number, entity: TasksEntity): Promise<Task> {
+  public async findByUser(
+    user: { _id: string; role?: string },
+    { status }: TaskMyQuery
+  ): Promise<Task[]> {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        userId: user._id,
+        status,
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      include: {
+        category: true,
+        tags: true,
+        comments: true,
+      },
+    });
+
+    return tasks as Task[];
+  }
+
+  public async update(id: number, entity: TasksEntity): Promise<Task> {
     const entityData = entity.toObject();
 
-    return this.prisma.task.update({
+    const task = await this.prisma.task.update({
       where: { id },
       data: {
         ...entityData,
         id,
         comments: {
-          connect: entityData.comments.map(({ id }) => ({ id }))
+          connect: entityData.comments.map(({ id }) => ({ id })),
         },
         tags: {
-          connect: entityData.tags.map(({ id }) => ({ id }))
-        }
+          connect: entityData.tags.map(({ id }) => ({ id })),
+        },
       },
       include: {
         category: true,
+        tags: true,
         comments: true,
-        tags: true
-      }
+      },
     });
+
+    return task as Task;
+  }
+
+  public async findAfterDate(date: Date): Promise<Task[]> {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        createdAt: {
+          gt: date,
+        }
+      }
+    })
+
+    return tasks as Task[]
   }
 }
