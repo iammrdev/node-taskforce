@@ -35,5 +35,5 @@
     ],
     "sharedGlobals": []
   },
-  "defaultProject": "auth"
+  "defaultProject": "identity"
 }
