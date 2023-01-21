@@ -21,7 +21,6 @@ export function getRabbitMqConfig(configService: ConfigService): RmqOptions {
       urls: [url],
       queue,
       persistent: true,
-      // @tutor: а как сделать ручной ack? и в каких случаях он необходим?
       noAck: true,
       queueOptions: {
         durable: true,

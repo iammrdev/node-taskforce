@@ -22,7 +22,6 @@ const getTasks = (context, options) => {
   return context.reduce((acc, item) => acc + options.fn(item), '')
 };
 
-// @tutor: в чем идея выделения отдельно всех этих конфигов?
 export function getMailConfig(): MailerAsyncOptions {
   return {
     useFactory: async (configService: ConfigService) => ({

@@ -19,7 +19,6 @@ async function bootstrap() {
 
 
   const configService = app.get<ConfigService>(ConfigService);
-  // @tutor: подробнее о принципе подключения микросервисов в bootstrap
   app.connectMicroservice(getRabbitMqConfig(configService));
 
   await app.startAllMicroservices();

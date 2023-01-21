@@ -27,13 +27,8 @@ export class UserService {
 
     const createdUser = await this.userRepository.create(entity);
 
-    // @tutor: есть ли какой-то стандарт сообщений? каких принципов стоит придерживаться?
-    // @tutor: основы RabbitMQ на примере management панели
-    // @tutor: почему не используем exchange?
-
     if (createdUser.role === UserRole.Performer) {
       this.rabbitClient.emit(
-        // @tutor: cmd это стандарт?
         { cmd: CommandEvent.AddSubscriber },
         {
           email: createdUser.email,
