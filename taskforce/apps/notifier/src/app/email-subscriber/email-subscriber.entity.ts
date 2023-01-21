@@ -24,7 +24,7 @@ export class EmailSubscriberEntity implements Entity<Subscriber> {
 
   public toObject(): Subscriber {
     return {
-      id: this.id ?? '',
+      _id: this.id ?? '',
       email: this.email,
       name: this.name,
       surname: this.surname,

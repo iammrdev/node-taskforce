@@ -19,7 +19,7 @@ import { CategoriesService } from './categories.service';
 @ApiTags('categories')
 @Controller('categories')
 export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) { }
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
   @ApiResponse({
@@ -28,6 +28,7 @@ export class CategoriesController {
   })
   async createCategory(@Body() dto: CreateCategoryDTO) {
     const newCategory = await this.categoriesService.createCategory(dto);
+
     return fillObject(CategoryRDO, newCategory);
   }
 
@@ -38,12 +39,14 @@ export class CategoriesController {
   })
   async getCategories() {
     const categories = await this.categoriesService.getCategories();
+
     return fillObject(CategoryRDO, categories);
   }
 
   @Get(':categoryId')
   async getCategory(@Param('categoryId') categoryId: number) {
     const existTag = await this.categoriesService.getCategory(categoryId);
+
     return fillObject(CategoryRDO, existTag);
   }
 
@@ -58,8 +61,14 @@ export class CategoriesController {
     status: HttpStatus.OK,
     description: 'Category updated',
   })
-  async updateCategory(@Param('categoryId') categoryId: number, @Body() dto: UpdateCategoryDTO) {
-    const updatedCategory = await this.categoriesService.updateCategory(categoryId, dto);
+  async updateCategory(
+    @Param('categoryId') categoryId: number,
+    @Body() dto: UpdateCategoryDTO
+  ) {
+    const updatedCategory = await this.categoriesService.updateCategory(
+      categoryId,
+      dto
+    );
     return fillObject(CategoryRDO, updatedCategory);
   }
 }

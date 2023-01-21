@@ -22,15 +22,7 @@ export class AuthController {
   @ApiResponse({ status: HttpStatus.CREATED, description: 'The new user has been successfully created', type: UserRDO })
   @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Invalid user data' })
   async signup(@Headers('Authorization') token: string, @Body() dto: AuthSignUpDTO) {
-    if (token) {
-      const [, accessToken] = token.split(' ');
-      const userSession = await this.authService.getUserSessionByToken(accessToken);
-
-      if (userSession) {
-        throw new BadRequestException('User has active session')
-      }
-    }
-
+    await this.authService.checkActiveSessions(token)
     const createdUser = await this.userService.createUser(dto);
 
     return fillObject(UserRDO, createdUser);

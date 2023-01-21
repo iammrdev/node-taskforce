@@ -1,11 +1,10 @@
 @baseUrl =  http://localhost:3002
-@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M0ODEyZjg4ZTlkZjUzOWViNTE1ODciLCJlbWFpbCI6ImlkZW50aXR5NEB0ZXN0LnJ1Iiwicm9sZSI6InBlcmZvcm1lciIsImNpdHkiOiLQnNC-0YHQutCy0LAiLCJpYXQiOjE2NzM5MTE3NTMsImV4cCI6MTY3Mzk3MTc1M30.VDViLoMhGAIncqa4X_pLfkhi73MFBYXwVioIJvtiYl0
-@token2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M1ZGUwZmJkM2M1MmVkM2I2YTFkNDYiLCJlbWFpbCI6ImlkZW50aXR5d0B0ZXN0LnJ1Iiwicm9sZSI6ImN1c3RvbWVyIiwiY2l0eSI6ItCc0L7RgdC60LLQsCIsImlhdCI6MTY3MzkxMTgzNiwiZXhwIjoxNjczOTcxODM2fQ.DSqSN4yyAgg7DwQF3GW819opKA3bEsFlY19C5G2T7ls
-@token3 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M0ODEyZjg4ZTlkZjUzOWViNTE1ODciLCJlbWFpbCI6ImlkZW50aXR5NEB0ZXN0LnJ1Iiwicm9sZSI6InBlcmZvcm1lciIsImNpdHkiOiLQnNC-0YHQutCy0LAiLCJpYXQiOjE2NzM4MjI1MzAsImV4cCI6MTY3Mzg4MjUzMH0.R0dJEVNk2HOYJG-kAnvmAqoy-68byedylJVx34TjLdw
+@token = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2M1ZGUwZmJkM2M1MmVkM2I2YTFkNDYiLCJlbWFpbCI6ImlkZW50aXR5d0B0ZXN0LnJ1Iiwicm9sZSI6ImN1c3RvbWVyIiwiY2l0eSI6ItCc0L7RgdC60LLQsCIsImlhdCI6MTY3NDMzMzM0NywiZXhwIjoxNjc0MzkzMzQ3fQ.MUs4qTbzaBIbBfKoCKtVdr0mV8ZJpNcO8gLCgdMuGKY
+@token2 = Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2M2NjNGUxYjU3ODUxZWU3YmNiZjRjZWYiLCJlbWFpbCI6ImlkZW50aXR5dzJAdGVzdC5ydSIsInJvbGUiOiJwZXJmb3JtZXIiLCJjaXR5Ijoi0JzQvtGB0LrQstCwIiwiaWF0IjoxNjc0MzMzNzMxLCJleHAiOjE2NzQzOTM3MzF9.CHKtTy52z8cC5cj6lINlea5eVJY4pnvi6kb6v5v8DzY
 
 # Create a new task
 POST {{baseUrl}}/api/tasks HTTP/1.1
-Authorization: {{token2}}
+Authorization: {{token}}
 Content-Type: application/json
 
 {
@@ -29,7 +28,7 @@ GET {{baseUrl}}/api/tasks/1 HTTP/1.1
 
 # Get all tasks
 GET {{baseUrl}}/api/tasks?sort=responses HTTP/1.1
-Authorization: {{token3}}
+Authorization: {{{{token2}}}}
 ###
 
 
@@ -40,7 +39,7 @@ Authorization: {{token}}
 
 # Take response
 POST {{baseUrl}}/api/tasks/3/response HTTP/1.1
-Authorization: {{token3}}
+Authorization: {{token2}}
 ###
 
 # Cancel task

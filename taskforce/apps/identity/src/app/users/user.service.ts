@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CommandEvent, User, UserRole } from '@taskforce/shared-types';
 import { USER_NOT_FOUND, USER_PASSWORD_WRONG } from './user.constants';
 import { AuthSignInDTO } from '../auth/dto/auth-signin.dto';
@@ -13,9 +18,9 @@ import { ClientProxy } from '@nestjs/microservices';
 export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
-    @Inject('RABBITMQ_SERVICE') private readonly rabbitClient: ClientProxy,
-  ) { }
-  z
+    @Inject('RABBITMQ_SERVICE') private readonly rabbitClient: ClientProxy
+  ) {}
+  z;
   async createUser(dto: AuthSignUpDTO): Promise<User | null> {
     const existedUser = await this.userRepository.findByEmail(dto.email);
 
@@ -23,7 +28,10 @@ export class UserService {
       throw new BadRequestException('User existed');
     }
 
-    const entity = await new UserEntity({ ...dto, passwordHash: '' }).setPassword(dto.password);
+    const entity = await new UserEntity({
+      ...dto,
+      passwordHash: '',
+    }).setPassword(dto.password);
 
     const createdUser = await this.userRepository.create(entity);
 
@@ -49,7 +57,7 @@ export class UserService {
     }
 
     const userEntity = new UserEntity(existedUser);
-    const passwordIsValid = await userEntity.comparePassword(dto.password)
+    const passwordIsValid = await userEntity.comparePassword(dto.password);
 
     if (!passwordIsValid) {
       throw new UnauthorizedException(USER_PASSWORD_WRONG);
@@ -58,15 +66,19 @@ export class UserService {
     return userEntity.toObject();
   }
 
-
   async getUserById(id: string) {
-    return this.userRepository.findById(id);
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new UnauthorizedException('Unauthorized user');
+    }
+
+    return user;
   }
 
   async getUserByEmail(email: string) {
     return this.userRepository.findByEmail(email);
   }
-
 
   async update(id: string, dto: UserUpdateDTO): Promise<User | null> {
     const existedUser = await this.userRepository.findById(id);
@@ -85,8 +97,9 @@ export class UserService {
 
     const verifiedUser = await this.verifyUser({ email, password });
 
-    const userEntity =
-      await new UserEntity(verifiedUser).setPassword(newPassword);
+    const userEntity = await new UserEntity(verifiedUser).setPassword(
+      newPassword
+    );
 
     return this.userRepository.update(verifiedUser._id, userEntity);
   }

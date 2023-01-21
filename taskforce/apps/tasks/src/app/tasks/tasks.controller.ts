@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   FileTypeValidator,
-  ForbiddenException,
   Get,
   HttpStatus,
   MaxFileSizeValidator,
@@ -30,27 +29,25 @@ import { TasksService } from './tasks.service';
 @ApiTags('tasks')
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly taskService: TasksService) { }
+  constructor(private readonly taskService: TasksService) {}
 
   @Post()
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Task created' })
   @UseGuards(JwtAccessTokenGuard)
-  async createTask(@UserInfoPipe() user: UserInfo, @Body() dto: CreateTaskDTO) {
-    if (user.role !== UserRole.Customer) {
-      throw new ForbiddenException('forbidden');
-    }
-
+  async createTask(
+    @UserInfoPipe(UserRole.Customer) user: UserInfo,
+    @Body() dto: CreateTaskDTO
+  ) {
     return this.taskService.createTask(user, dto);
   }
 
   @Get()
   @ApiResponse({ status: HttpStatus.OK, description: 'Tasks list' })
   @UseGuards(JwtAccessTokenGuard)
-  async getTasks(@UserInfoPipe() user: UserInfo, @Query() query: TaskQuery) {
-    if (user.role !== UserRole.Performer) {
-      throw new ForbiddenException('forbidden');
-    }
-
+  async getTasks(
+    @UserInfoPipe(UserRole.Performer) user: UserInfo,
+    @Query() query: TaskQuery
+  ) {
     return this.taskService.getTasks(query);
   }
 
@@ -95,13 +92,9 @@ export class TasksController {
   @ApiResponse({ status: HttpStatus.OK, description: 'Response on task' })
   @UseGuards(JwtAccessTokenGuard)
   async takeResponse(
-    @UserInfoPipe() user: UserInfo,
+    @UserInfoPipe(UserRole.Performer) user: UserInfo,
     @Param('taskId') taskId: number
   ) {
-    if (user.role !== UserRole.Performer) {
-      throw new ForbiddenException('forbidden');
-    }
-
     return this.taskService.takeResponse(taskId, user._id);
   }
 
@@ -116,7 +109,10 @@ export class TasksController {
   }
 
   @Post(':taskId/progress')
-  @ApiResponse({ status: HttpStatus.OK, description: 'Switch task to progress' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Switch task to progress',
+  })
   @UseGuards(JwtAccessTokenGuard)
   async switchTaskToProgress(
     @UserInfoPipe() user: UserInfo,
@@ -159,9 +155,8 @@ export class TasksController {
         ],
       })
     )
-    file: Express.Multer.File,
+    file: Express.Multer.File
   ) {
-
     return this.taskService.updateImage(taskId, { image: file.filename });
   }
 }

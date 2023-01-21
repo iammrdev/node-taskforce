@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { JwtPayload, Token } from '@taskforce/shared-types';
 import { JwtService } from '@nestjs/jwt';
 import { TokensRepository } from '../tokens/tokens.repository';
@@ -12,7 +12,7 @@ export class AuthService {
   constructor(
     @Inject('JwtAccessService') private readonly jwtAccessService: JwtService,
     @Inject('JwtRefreshService') private readonly jwtRefreshService: JwtService,
-    private readonly tokensRepository: TokensRepository,
+    private readonly tokensRepository: TokensRepository
   ) { }
 
   private async getAccessTokenInfo(token: string) {
@@ -28,22 +28,27 @@ export class AuthService {
       sub: dto._id,
       email: dto.email,
       role: dto.role,
-      city: dto.city
+      city: dto.city,
     };
 
     const accessToken = await this.jwtAccessService.signAsync(payload);
 
     const refreshToken = await this.jwtRefreshService.signAsync(payload);
     const refreshTokenInfo = await this.getRefreshTokenInfo(refreshToken);
-    const refreshTokenEntity = new TokensEntity({ userId: dto._id, exp: new Date(refreshTokenInfo.exp * 1000) });
+    const refreshTokenEntity = new TokensEntity({
+      userId: dto._id,
+      exp: new Date(refreshTokenInfo.exp * 1000),
+    });
 
     await refreshTokenEntity.setToken(refreshToken);
 
-    const existedRefreshToken = await this.tokensRepository.findByUserId(dto._id);
+    const existedRefreshToken = await this.tokensRepository.findByUserId(
+      dto._id
+    );
 
     if (existedRefreshToken) {
       const { id: refreshTokenId } = fillObject(TokenRDO, existedRefreshToken);
-      await this.tokensRepository.update(refreshTokenId, refreshTokenEntity)
+      await this.tokensRepository.update(refreshTokenId, refreshTokenEntity);
     } else {
       await this.tokensRepository.create(refreshTokenEntity);
     }
@@ -56,10 +61,22 @@ export class AuthService {
     };
   }
 
-
   async getUserSessionByToken(token: string): Promise<Token | null> {
     const tokenInfo = await this.getAccessTokenInfo(token);
 
     return this.tokensRepository.findByUserId(tokenInfo.sub);
+  }
+
+  async checkActiveSessions(token?: string): Promise<void> {
+    if (!token) {
+      return;
+    }
+
+    const [, accessToken] = token.split(' ');
+    const userSession = await this.getUserSessionByToken(accessToken);
+
+    if (userSession) {
+      throw new BadRequestException('User has active session');
+    }
   }
 }

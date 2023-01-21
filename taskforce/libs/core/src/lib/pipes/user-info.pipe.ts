@@ -1,5 +1,9 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { UserCity } from '@taskforce/shared-types';
+import {
+  createParamDecorator,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
+import { UserCity, UserRole } from '@taskforce/shared-types';
 
 export interface UserInfo {
   _id: string;
@@ -9,9 +13,13 @@ export interface UserInfo {
 }
 
 export const UserInfoPipe = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
-    const request = context.switchToHttp().getRequest();
+  (validRole: UserRole, context: ExecutionContext) => {
+    const { user } = context.switchToHttp().getRequest();
 
-    return request.user;
+    if (validRole && user.role !== validRole) {
+      throw new ForbiddenException('forbidden');
+    }
+
+    return user;
   }
 );
