@@ -1,11 +1,11 @@
 import { Task } from '@taskforce/shared-types';
 import { IsNotEmpty } from 'class-validator';
-import { NAME_IS_EMPTY, USER_ID_IS_EMPTY } from '../email-subscriber.constants';
+import { SubscriberValidationError } from '../email-subscriber.constants';
 
 export class NotifySubscriberDTO {
-  @IsNotEmpty({ message: USER_ID_IS_EMPTY })
+  @IsNotEmpty({ message: SubscriberValidationError.UserIdIsEmpty })
   subscriberId: string;
 
-  @IsNotEmpty({ message: NAME_IS_EMPTY })
+  @IsNotEmpty({ message: SubscriberValidationError.NameIsEmpty })
   tasks: Task[];
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { EmailSubscriberRepository } from './email-subscriber.repository';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
-import { EMAIL_SUBSCRIBER_EXISTS } from './email-subscriber.constants';
+import { SubscriberValidationError } from './email-subscriber.constants';
 import { EmailSubscriberEntity } from './email-subscriber.entity';
 import { MailService } from '../mail/mail.service';
 import { ClientProxy } from '@nestjs/microservices';
@@ -20,7 +20,7 @@ export class EmailSubscriberService {
     const existedSubscriber = await this.emailSubscriberRepository.findByEmail(subscriber.email);
 
     if (existedSubscriber) {
-      throw new BadRequestException(EMAIL_SUBSCRIBER_EXISTS);
+      throw new BadRequestException(SubscriberValidationError.EmailExists);
     }
 
     this.mailService.sendNotifyNewSubscriber(subscriber);
@@ -32,7 +32,7 @@ export class EmailSubscriberService {
     const existedSubscriber = await this.emailSubscriberRepository.findById(dto.subscriberId);
 
     if (!existedSubscriber) {
-      throw new BadRequestException('Subscriber not found');
+      throw new BadRequestException(SubscriberValidationError.NotFound);
     }
 
     return this.mailService.sendEmailWithTasks(existedSubscriber, dto.tasks);

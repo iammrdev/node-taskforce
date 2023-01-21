@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { CommandEvent, User, UserRole } from '@taskforce/shared-types';
-import { USER_NOT_FOUND, USER_PASSWORD_WRONG } from './user.constants';
+import { UserValidationError } from './user.constants';
 import { AuthSignInDTO } from '../auth/dto/auth-signin.dto';
 import { AuthSignUpDTO } from '../auth/dto/auth-signup.dto';
 import { UserEntity } from './user.entity';
@@ -19,7 +19,7 @@ export class UserService {
   constructor(
     private readonly userRepository: UserRepository,
     @Inject('RABBITMQ_SERVICE') private readonly rabbitClient: ClientProxy
-  ) {}
+  ) { }
   z;
   async createUser(dto: AuthSignUpDTO): Promise<User | null> {
     const existedUser = await this.userRepository.findByEmail(dto.email);
@@ -53,14 +53,14 @@ export class UserService {
     const existedUser = await this.userRepository.findByEmail(dto.email);
 
     if (!existedUser) {
-      throw new UnauthorizedException(USER_NOT_FOUND);
+      throw new UnauthorizedException(UserValidationError.NotFound);
     }
 
     const userEntity = new UserEntity(existedUser);
     const passwordIsValid = await userEntity.comparePassword(dto.password);
 
     if (!passwordIsValid) {
-      throw new UnauthorizedException(USER_PASSWORD_WRONG);
+      throw new UnauthorizedException(UserValidationError.PasswordWrong);
     }
 
     return userEntity.toObject();

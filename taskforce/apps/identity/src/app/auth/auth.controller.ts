@@ -1,4 +1,4 @@
-import { Headers, Body, Controller, HttpCode, HttpStatus, Post, BadRequestException } from '@nestjs/common';
+import { Headers, Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 import { fillObject } from '@taskforce/core';
 import { AuthService } from './auth.service';

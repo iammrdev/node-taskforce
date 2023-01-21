@@ -1,21 +1,16 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
-import {
-  EMAIL_NOT_VALID,
-  NAME_IS_EMPTY,
-  SURNAME_IS_EMPTY,
-  USER_ID_IS_EMPTY,
-} from '../email-subscriber.constants';
+import { SubscriberValidationError } from '../email-subscriber.constants';
 
 export class CreateSubscriberDto {
-  @IsEmail({}, { message: EMAIL_NOT_VALID })
+  @IsEmail({}, { message: SubscriberValidationError.EmailNotValid })
   email: string;
 
-  @IsNotEmpty({ message: NAME_IS_EMPTY })
+  @IsNotEmpty({ message: SubscriberValidationError.NameIsEmpty })
   name: string;
 
-  @IsNotEmpty({ message: SURNAME_IS_EMPTY })
+  @IsNotEmpty({ message: SubscriberValidationError.SurnameIsEmpty })
   surname: string;
 
-  @IsNotEmpty({ message: USER_ID_IS_EMPTY })
+  @IsNotEmpty({ message: SubscriberValidationError.UserIdIsEmpty })
   userId: string;
 }

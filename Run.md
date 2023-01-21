@@ -16,7 +16,11 @@ npm i
 cd taskforce/apps/identity/
 docker-compose up -d
 
-# tasks
+# notifier
+cd taskforce/apps/notifier/
+docker-compose up -d
+
+# tasks (зависит от сервиса notifier)
 cd taskforce/apps/tasks/
 docker-compose up -d
 
@@ -24,9 +28,6 @@ docker-compose up -d
 cd taskforce/apps/feedback/
 docker-compose up -d
 
-# notifier
-cd taskforce/apps/notifier/
-docker-compose up -d
 ```
 
 ### 3. Добавить файлы с переменными окружения
