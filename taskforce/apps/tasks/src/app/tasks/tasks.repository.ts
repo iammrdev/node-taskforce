@@ -1,6 +1,6 @@
-import { CRUDRepository, UserInfo } from '@taskforce/core';
+import { CRUDRepository } from '@taskforce/core';
 import { TasksEntity } from './tasks.entity';
-import { Task, UserRole } from '@taskforce/shared-types';
+import { Task } from '@taskforce/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
 import { TaskMyQuery } from './query/task-my.query';
@@ -10,7 +10,7 @@ import { TaskQuery } from './query/task.query copy';
 export class TasksRepository
   implements CRUDRepository<TasksEntity, number, Task>
 {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   public async create(entity: TasksEntity): Promise<Task> {
     const entityData = entity.toObject();
@@ -67,7 +67,6 @@ export class TasksRepository
     limit,
     tags,
     category,
-    sort,
     page,
     city,
   }: TaskQuery): Promise<Task[]> {
@@ -85,7 +84,6 @@ export class TasksRepository
       },
       take: limit,
       skip: page > 0 ? limit * (page - 1) : undefined,
-      // responses => [1, 2, 3]
       orderBy: [{ title: 'desc' }],
       include: {
         category: true,
@@ -147,10 +145,10 @@ export class TasksRepository
       where: {
         createdAt: {
           gt: date,
-        }
-      }
-    })
+        },
+      },
+    });
 
-    return tasks as Task[]
+    return tasks as Task[];
   }
 }
